@@ -1,8 +1,7 @@
+El presente repositorio dirigido hacia una PoC se basa en el repositorio [Instagram Scrapper](https://github.com/rarcega/instagram-scraper), el cual te permite obtener una gran cantidad de información de un usuario a través de su perfil de Instagram, siempre y cuando sea un perfil público o sea amigo del perfil representado por las credenciales que se usan para lanzar el servicio. 
 
-Se ha trabajado y se han hecho modificaciones sobre una librería ya existente, con licencia pública. Se incluye el README de esa librería más abajo.
-
-El README de toda la herrramienta de scrapping se está preparando. En breve estará listo.
-
+A continuación se deja una copia del README de Instagram Scrapper. Abajo se ofrece una breve descripción de las funcionalidades adicionales incorporadas a la herramienta.
+______________________________________________
 <img src="https://camo.githubusercontent.com/9ac4a1f7f5ea0f573451b5ddc06e29c8aa113a85/68747470733a2f2f692e696d6775722e636f6d2f6948326a6468562e706e67" align="right">
 
 Instagram Scraper
@@ -219,3 +218,68 @@ IN NO EVENT SHALL THE AUTHORS BE LIABLE FOR ANY CLAIM, DAMAGES OR
 OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE,
 ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
 OTHER DEALINGS IN THE SOFTWARE.
+________________________________________
+
+Contribución Departamento de Ideas Locas Telefónica CDO
+------------
+Este servicio se ha querido completar con un servicio de detección de imágenes sesgado hacia contenido explícito. Para ello se ha hecho uso de [Nudity image detection HTTP API](https://github.com/EugenCepoi/nsfw_api). Este proyecto proporciona una API REST lista para implementar que permite predecir si una imagen es ofensiva o tiene contenido para adultos. 
+
+<div style="text-align:center">
+<img src="nsfw-diagram.PNG" alt="drawing" width="400"/>
+</div>
+
+Para realizar la prueba, se procedió a desplegar el servicio en Heroku, [tal y como se explica en esta sección](https://github.com/EugenCepoi/nsfw_api#running-on-heroku). De esta manera, se pueden recoger las urls del contenido multimedia de interés y, haciendo un POST de un batch de urls, se puede obtener el nivel de idoneidad para el consumo de esa imagen (siendo 0 muy adecuada y 1 no adecuada en absoluto). 
+
+Resumen de uso
+------------
+### Obtencíon de las fotografías de un perfil y análisis de idoneidad
+
+```bash
+$ python app.py @insta_args.txt username
+```
+
+**Requisitos**: 
+1. Tener un perfil de Instagram. Las credenciales a usar se introducen en un fichero llamado `insta_args.txt`.
+2. El perfil a scrapear debe ser público o deber ser su amigo para poder acceder a todo su media (imágenes, vídeos, stories, comentarios, likes…). Se hace uso de la API de Instagram. En esta PoC nos remitimos sólo a las imágenes.
+
+**Outputs**
+1. Descarga de todos los contenidos multimedia del perfil de Instagram
+2. Generación de un fichero `.json` con metadatos del contenido multimedia.
+3. Generación de un fichero `.json` con las scores de las urls obtenidas desde el servicio NSFW API.
+.
+### Obtencíon de las fotografías de los perfiles seguidos por un usuario y análisis de idoneidad
+
+```bash
+$ python app_followers.py @insta_args.txt username
+```
+**Requisitos**: 
+1. Tener un perfil de Instagram. Las credenciales a usar se introducen en un fichero llamado `insta_args.txt`.
+2. El perfil a scrapear debe ser público o deber ser su amigo para poder acceder a las fotografías de los seguidores.
+
+**Outputs**
+1. Generación de un fichero `.json` con las scores de las urls de los usuarios seguidores obtenidas desde el servicio NSFW API.
+
+### Obtencíon de las fotografías de los perfiles seguidos por un usuario y análisis de idoneidad
+
+```bash
+$ python app_followed.py @insta_args.txt username
+```
+**Requisitos**: 
+1. Tener un perfil de Instagram. Las credenciales a usar se introducen en un fichero llamado `insta_args.txt`.
+2. El perfil a scrapear debe ser público o deber ser su amigo para poder acceder a las fotografías de los usuarios seguidos por el perfil.
+
+**Outputs**
+1. Generación de un fichero `.json` con las scores de las urls de los usuarios seguidos por el perfil obtenidas desde el servicio NSFW API.
+
+### Obtencíon de las fotografías de los perfiles sugeridos por un usuario y análisis de idoneidad
+
+```bash
+$ python app_suggestions.py @insta_args.txt username
+```
+
+**Requisitos**: 
+1. Tener un perfil de Instagram. Las credenciales a usar se introducen en un fichero llamado `insta_args.txt`.
+2. El perfil a scrapear es privado y no se es amigo del perfil. Se accede a las fotografías de los usuarios sugeridos tras haber hecho login.
+
+**Outputs**
+1. Generación de un fichero `.json` con las scores de las urls de los usuarios sugeridos obtenidas desde el servicio NSFW API.

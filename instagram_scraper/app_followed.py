@@ -82,7 +82,7 @@ class FriendsIGScrapper(object):
                 time.sleep(10)
                 wait.until(EC.visibility_of_element_located((By.XPATH, '/html/body/div[3]/div/div[2]/ul/div')))
                 
-                print('Scrapping followers profile pics urls.')
+                print('Scrapping followed profile pics urls.')
 
                 soup = BeautifulSoup(self.browser.page_source, 'html.parser')
                 images_urls = []
@@ -92,7 +92,7 @@ class FriendsIGScrapper(object):
             except TimeoutException:
                 print("Timed out waiting for page to load")
             except NoSuchElementException:
-                print("Make sure the you are friend of the user to be scrapped [!]")
+                print("Make sure that you are friend of the user to be scrapped [!]")
 
         self.browser.close()
 
