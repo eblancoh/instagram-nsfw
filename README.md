@@ -246,7 +246,10 @@ $ python app.py @insta_args.txt username
 1. Descarga de todos los contenidos multimedia del perfil de Instagram
 2. Generación de un fichero `.json` con metadatos del contenido multimedia.
 3. Generación de un fichero `.json` con las scores de las urls obtenidas desde el servicio NSFW API.
-.
+
+[Muestra `python app.py @insta_args.txt username`](https://youtu.be/8gQt43T5HnU)
+
+
 ### Obtencíon de las fotografías de los perfiles seguidos por un usuario y análisis de idoneidad
 
 ```bash
@@ -258,6 +261,8 @@ $ python app_followers.py @insta_args.txt username
 
 **Outputs**
 1. Generación de un fichero `.json` con las scores de las urls de los usuarios seguidores obtenidas desde el servicio NSFW API.
+
+[Muestra `python app_followers.py @insta_args.txt username`](https://youtu.be/k0H8mRcb9Zo)
 
 ### Obtencíon de las fotografías de los perfiles seguidos por un usuario y análisis de idoneidad
 
@@ -271,6 +276,8 @@ $ python app_followed.py @insta_args.txt username
 **Outputs**
 1. Generación de un fichero `.json` con las scores de las urls de los usuarios seguidos por el perfil obtenidas desde el servicio NSFW API.
 
+[Muestra `python app_followed.py @insta_args.txt username`](https://youtu.be/PuNIELuiGFQ)
+
 ### Obtencíon de las fotografías de los perfiles sugeridos por un usuario y análisis de idoneidad
 
 ```bash
@@ -283,3 +290,6 @@ $ python app_suggestions.py @insta_args.txt username
 
 **Outputs**
 1. Generación de un fichero `.json` con las scores de las urls de los usuarios sugeridos obtenidas desde el servicio NSFW API.
+
+[Muestra `python app_suggestions.py @insta_args.txt username`](https://youtu.be/OBNdPvdVcPg)
+
