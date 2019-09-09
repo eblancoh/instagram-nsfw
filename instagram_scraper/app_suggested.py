@@ -22,6 +22,8 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.common.exceptions import TimeoutException
+from selenium.webdriver.chrome.options import Options as ChromeOptions
+from selenium.webdriver.firefox.options import Options as FirefoxOptions
 
 
 class PrivateIGScrapper(object):
@@ -35,9 +37,19 @@ class PrivateIGScrapper(object):
         # Use driver dependng on the chosen solution. 
         # Driver has to be in PATH
         if self.driver == 'chromedriver':
-            self.browser = webdriver.Chrome()
+            # Desde mediados de agosto los mamones de IG 
+            # detectan que estás conectado con Chromedriver o 
+            # con geckodriver. Incluimos la opción headless 
+            # para que no nos detecten.
+            # Ver https://duo.com/decipher/driving-headless-chrome-with-python
+            chrome_options = ChromeOptions()
+            chrome_options.add_argument("--headless")
+            self.browser = webdriver.Chrome(chrome_options=chrome_options)
         elif self.driver == 'geckodriver':
-            self.browser = webdriver.Firefox()
+            # https://www.edureka.co/community/10026/headless-gecko-driver-using-selenium
+            firefox_options = FirefoxOptions()
+            firefox_options.add_argument("--headless")
+            self.browser = webdriver.Firefox(firefox_options=firefox_options)
         
         self.url = "https://www.instagram.com/" + str(self.username)
 
@@ -59,16 +71,16 @@ class PrivateIGScrapper(object):
                 actions = ActionChains(self.browser)
                 actions.click(elem).perform()
                 # Metemos usuario y contraseña y clicamos
-                time.sleep(2)
+                time.sleep(5)
                 user_name_elem = self.browser.find_element_by_xpath("//input[@name='username']")
                 user_name_elem.clear()
                 user_name_elem.send_keys(self.login_user)
                 password_elem = self.browser.find_element_by_xpath("//input[@name='password']")
                 password_elem.clear()
                 password_elem.send_keys(self.login_pass)
-                time.sleep(2)
+                time.sleep(5)
                 login_button = self.browser.find_element_by_xpath('//*[@id="react-root"]/section/main/div/article/div/div[1]/div/form/div[4]').click()
-                time.sleep(2)
+                time.sleep(5)
 
                 # Volvemos a hacer un browser.get(url)
                 wait = WebDriverWait(self.browser, 10)
@@ -122,10 +134,12 @@ def nsfw_api_batch_post(input, username):
 
         # Guardamos las scores en el fichero de destino con sus correspondientes urls:
         with open(os.path.join(basedir, username, 'scores_suggestions.json'), 'w') as outfile:
-            json.dump(json.loads(response.text), outfile, indent=4, separators=[',', ':'], sort_keys=True, ensure_ascii=False)
+            json_obj = json.loads(response.text)
+            json_obj['predictions'] = sorted(json_obj['predictions'], key=lambda x : x['score'], reverse=True)
+            #json.dump(json.loads(response.text), outfile, indent=4, separators=[',', ':'], sort_keys=True, ensure_ascii=False)
+            json.dump(json_obj, outfile, indent=4, separators=[',', ':'], sort_keys=True, ensure_ascii=False)
             #add trailing newline for POSIX compatibility
             outfile.write('\n')
-
         return response.text
         
     except requests.exceptions.RequestException as e:

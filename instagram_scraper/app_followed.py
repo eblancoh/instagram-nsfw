@@ -23,6 +23,8 @@ from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.common.exceptions import TimeoutException
 from selenium.common.exceptions import NoSuchElementException
+from selenium.webdriver.chrome.options import Options as ChromeOptions
+from selenium.webdriver.firefox.options import Options as FirefoxOptions
 
 # User must be a friend of the user
 
@@ -37,9 +39,19 @@ class FriendsIGScrapper(object):
         # Use driver dependng on the chosen solution. 
         # Driver has to be in PATH
         if self.driver == 'chromedriver':
-            self.browser = webdriver.Chrome()
+            # Desde mediados de agosto los mamones de IG 
+            # detectan que estás conectado con Chromedriver o 
+            # con geckodriver. Incluimos la opción headless 
+            # para que no nos detecten.
+            # Ver https://duo.com/decipher/driving-headless-chrome-with-python
+            chrome_options = ChromeOptions()
+            chrome_options.add_argument("--headless")
+            self.browser = webdriver.Chrome(chrome_options=chrome_options)
         elif self.driver == 'geckodriver':
-            self.browser = webdriver.Firefox()
+            # https://www.edureka.co/community/10026/headless-gecko-driver-using-selenium
+            firefox_options = FirefoxOptions()
+            firefox_options.add_argument("--headless")
+            self.browser = webdriver.Firefox(firefox_options=firefox_options)
         
         self.url = "https://www.instagram.com/" + str(self.username)
 
